@@ -1,0 +1,24 @@
+#!/bin/sh
+
+echo "Choice what's you want to create project:"
+select var in "AS Project" "AIR Project";
+do
+break
+done
+if [ "$var"x = "AS Project"x ]; then
+  createasproj
+elif [ "$var"x = "AIR Project"x ]; then
+  createairproj
+else
+  echo "Your choice is error!"
+fi
+
+createasproj()
+{
+  echo "createasproj"
+}
+
+createairproj()
+{
+  echo "createairproj"
+}
