@@ -1,13 +1,74 @@
 #!/bin/sh
 
+projname=$1
+projpath=$2
+
+if [ "$1"x = ""x ]; then
+  echo "project name can't empty!"
+  exit 0
+fi
+
+projhome=""
+
+FLEX_HOME=''
+BIN_DIR='${basedir}/bin'
+LIB_DIR='${basedir}/lib'
+SRC_DIR='${basedir}/src'
+DEBUG_DIR='${basedir}/debug'
+FLEX_FRAMEWORKS='${FLEX_HOME}/frameworks/libs'
+
+chkpath()
+{
+  if [ "$projpath"x = ""x ]; then
+    projhome="$projname"
+    echo "project will create current dir:${projhome}"
+  else
+    if [ -d "$projpath""$projname" ]; then
+      echo "proj path has exeit!"
+      exit 0
+    fi
+    projhome="${projpath}${projname}"
+    echo "project will create:${projhome}"
+  fi
+}
+
+createdirs()
+{
+  #mkdirs
+  mkdir $projhome
+  mkdir "$projhome"'/src'
+  mkdir "$projhome"'/bin'
+  mkdir "$projhome"'/lib'
+  mkdir "$projhome"'/debug'
+  #mk build.properties
+  echo 'FLEX_HOME = '${FLEX_HOME} >> ${projhome}/build.properties
+  echo 'BIN_DIR = '${BIN_DIR} >> ${projhome}/build.properties
+  echo 'LIB_DIR = '${LIB_DIR} >> ${projhome}/build.properties
+  echo 'SRC_DIR = '${SRC_DIR} >> ${projhome}/build.properties
+  echo 'DEBUG_DIR = '${DEBUG_DIR} >> ${projhome}/build.properties
+  echo 'FLEX_FRAMEWORKS = '${FLEX_FRAMEWORKS} >> ${projhome}/build.properties
+  #mk build.xml
+  echo '<?xml version="1.0" encoding="utf-8"?>' >> ${projname}/build.xml
+  echo '<project name="'${projname}'" default="build" basedir=".">' >> ${projname}/build.xml
+  echo '  <property file="build.properties" />' >> ${projname}/build.xml
+  echo '  <taskdef resource="flexTasks.tasks" classpath="${FLEX_HOME}/ant/lib/flexTasks.jar" />' >> ${projname}/build.xml
+  echo '</project>' >> ${projname}/build.xml
+}
+
 createasproj()
 {
-  echo "createasproj"
+  chkpath
+  echo "create AS project"
+  createdirs
+  echo "AS project create ok!"
 }
 
 createairproj()
 {
-  echo "createairproj"
+  chkpath
+  echo "create AIR project"
+  createdirs
+  echo "AIR project create ok!"
 }
 
 echo "Choice what's you want to create project:"
