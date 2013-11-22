@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh                                                                         
 
 projname=$1
 projpath=$2
@@ -10,7 +10,7 @@ fi
 
 projhome=""
 
-FLEX_HOME=''
+FLEX_HOME='/Applications/Adobe\ Flash\ Builder\ 4.6/sdks/AIR-3.9'
 BIN_DIR='${basedir}/bin'
 LIB_DIR='${basedir}/lib'
 SRC_DIR='${basedir}/src'
@@ -35,7 +35,7 @@ chkpath()
 createdirs()
 {
   #mkdirs
-  mkdir $projhome
+  mkdir $projhome                                                                 
   mkdir "$projhome"'/src'
   mkdir "$projhome"'/bin'
   mkdir "$projhome"'/lib'
@@ -54,48 +54,34 @@ createdirs()
   #mk build.properties
   echo 'FLEX_HOME = '${FLEX_HOME} >> ${projhome}/build.properties
   echo 'BIN_DIR = '${BIN_DIR} >> ${projhome}/build.properties
-  echo 'LIB_DIR = '${LIB_DIR} >> ${projhome}/build.properties
+  echo 'LIB_DIR = '${LIB_DIR} >> ${projhome}/build.properties                     
   echo 'SRC_DIR = '${SRC_DIR} >> ${projhome}/build.properties
   echo 'DEBUG_DIR = '${DEBUG_DIR} >> ${projhome}/build.properties
   echo 'FLEX_FRAMEWORKS = '${FLEX_FRAMEWORKS} >> ${projhome}/build.properties
-  
+
   #mk build.xml
   echo '<?xml version="1.0" encoding="utf-8"?>' >> ${projname}/build.xml
-  echo '<project name="'${projname}'" default="build_debug" basedir=".">' >> ${projname}/build.xml
+  echo '<project name="'${projname}'" default="build" basedir=".">' >> ${projname}/build.xml
   
   echo '  <property file="build.properties" />' >> ${projname}/build.xml
   echo '  <taskdef resource="flexTasks.tasks" classpath="${FLEX_HOME}/ant/lib/flexTasks.jar" />' >> ${projname}/build.xml
   
   echo '  <target name="build">' >> ${projname}/build.xml
-  echo '    <echo>====start build as project!====</echo>' >> ${projname}/build.xml
   echo '    <antcall target="clean"/>' >> ${projname}/build.xml
-  echo '    <antcall target="compile"/>' >> ${projname}/build.xml
+  echo '    <antcall target="compile">' >> ${projname}/build.xml
+  echo '      <param name="isdebug" value="true"/>' >> ${projname}/build.xml
+  echo '    </antcall>' >> ${projname}/build.xml
   echo '  </target>' >> ${projname}/build.xml
-  
-  echo '  <target name="build_debug">' >> ${projname}/build.xml
-  echo '    <echo>====start build debug as project!====</echo>' >> ${projname}/build.xml
-  echo '    <antcall target="clean"/>' >> ${projname}/build.xml
-  echo '    <antcall target="compile_debug"/>' >> ${projname}/build.xml
-  echo '  </target>' >> ${projname}/build.xml
-  
+                                                                                  
   echo '  <target name="clean">' >> ${projname}/build.xml
   echo '    <delete includeemptydirs="true">' >> ${projname}/build.xml
-  echo '      <echo>====start clean debug dir & bin dir!====</echo>' >> ${projname}/build.xml
   echo '      <fileset dir="${DEBUG_DIR}" includes="**/*"/>' >> ${projname}/build.xml
   echo '      <fileset dir="${BIN_DIR}" includes="**/*"/>' >> ${projname}/build.xml
   echo '    </delete>' >> ${projname}/build.xml
   echo '  </target>' >> ${projname}/build.xml
   
-  echo '  <target name="compile_debug">' >> ${projname}/build.xml
-  echo '    <echo>====start compile debug!</echo>====' >> ${projname}/build.xml
-  echo '    <mxmlc file="${SRC_DIR}/Main.as" output="${DEBUG_DIR}/'${projname}'.swf" static-rsls="true" accessible="true" debug="true">' >> ${projname}/build.xml
-  echo '      <source-path path-element="${SRC_DIR}"/>' >> ${projname}/build.xml
-  echo '    </mxmlc>' >> ${projname}/build.xml
-  echo '  </target>' >> ${projname}/build.xml
-  
   echo '  <target name="compile">' >> ${projname}/build.xml
-  echo '    <echo>====start compile debug!</echo>====' >> ${projname}/build.xml
-  echo '    <mxmlc file="${SRC_DIR}/Main.as" output="${DEBUG_DIR}/'${projname}'.swf" static-rsls="true" accessible="true" debug="false">' >> ${projname}/build.xml
+  echo '    <mxmlc file="${SRC_DIR}/Main.as" output="${DEBUG_DIR}/'${projname}'.swf" static-rsls="true" accessible="true" debug="${isdebug}">' >> ${projname}/build.xml
   echo '      <source-path path-element="${SRC_DIR}"/>' >> ${projname}/build.xml
   echo '    </mxmlc>' >> ${projname}/build.xml
   echo '  </target>' >> ${projname}/build.xml
@@ -103,7 +89,7 @@ createdirs()
   echo '</project>' >> ${projname}/build.xml
 }
 
-createasproj()
+createasproj()                                                                    
 {
   chkpath
   echo "create AS project"
@@ -124,11 +110,11 @@ select var in "AS Project" "AIR Project";
 do
 break
 done
-
+                                                                                  
 if [ "$var"x = "AS Project"x ]; then
   createasproj
 elif [ "$var"x = "AIR Project"x ]; then
-  createairproj
+	createairproj
 else
   echo "Your choice is error!"
 fi
